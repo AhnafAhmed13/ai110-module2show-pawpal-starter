@@ -4,8 +4,10 @@ from dataclasses import dataclass, field
 @dataclass
 class Task:
     title: str
+    description: str
     duration: int
-    priority: str
+    priority: int
+    status: str
 
 
 @dataclass
@@ -15,7 +17,7 @@ class Pet:
     tasks: list[Task] = field(default_factory=list)
 
     def add_task(self, task: Task) -> None:
-        pass
+        self.tasks.append(task)
 
 
 class Owner:
@@ -25,7 +27,7 @@ class Owner:
         self.pets: list[Pet] = []
 
     def add_pet(self, pet: Pet) -> None:
-        pass
+        self.pets.append(pet)
 
 
 class Scheduler:
@@ -33,4 +35,13 @@ class Scheduler:
         self.owner = owner
 
     def create_schedule(self) -> list[Task]:
-        pass
+        all_tasks = [task for pet in self.owner.pets for task in pet.tasks]
+        sorted_tasks = sorted(all_tasks, key=lambda t: t.priority)
+
+        schedule = []
+        remaining_time = self.owner.available_time
+        for task in sorted_tasks:
+            if task.duration <= remaining_time:
+                schedule.append(task)
+                remaining_time -= task.duration
+        return schedule
