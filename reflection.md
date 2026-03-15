@@ -37,10 +37,17 @@ UML (draft):
 - Briefly describe your initial UML design.
 - What classes did you include, and what responsibilities did you assign to each?
 
+> 4 classes: Owner, Pet, Task, Scheduler
+> Owner has pets
+> Pet has tasks
+> Scheduler creates schedule
+
 **b. Design changes**
 
 - Did your design change during implementation?
 - If yes, describe at least one change and why you made it.
+
+> I replaced the Scheduler class with create schedule function to simplify the design and logic
 
 ---
 
