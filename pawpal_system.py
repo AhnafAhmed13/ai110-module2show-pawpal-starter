@@ -28,5 +28,9 @@ class Owner:
         pass
 
 
-def create_schedule(owner: Owner) -> list[Task]:
-    pass
+class Scheduler:
+    def __init__(self, owner: Owner):
+        self.owner = owner
+
+    def create_schedule(self) -> list[Task]:
+        pass

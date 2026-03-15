@@ -48,6 +48,7 @@ UML (draft):
 - If yes, describe at least one change and why you made it.
 
 > I replaced the Scheduler class with create schedule function to simplify the design and logic
+> However, I reverted back to the the Scheduler class to align it with the project requirements
 
 ---
 
