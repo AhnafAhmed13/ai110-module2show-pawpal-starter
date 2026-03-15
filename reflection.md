@@ -2,6 +2,36 @@
 
 ## 1. System Design
 
+Core actions:
+
+- Add a pet
+- Schedule a walk
+- See today's tasks
+
+UML (draft):
+
+- Owner
+    - name
+    - pets
+    - time available
+    - add pet ()
+
+- Pet
+    - name
+    - species
+    - tasks
+    - add task ()
+
+- Task
+    - title
+    - duration
+    - priority
+
+- Scheduler
+    - tasks
+    - create schedule ()
+
+
 **a. Initial design**
 
 - Briefly describe your initial UML design.
