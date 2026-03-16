@@ -129,7 +129,33 @@ if st.button("Add task", disabled=no_pet):
 tasks = store.get_tasks(st.session_state.selected_owner) if st.session_state.selected_owner else []
 if tasks:
     st.write("Current tasks:")
-    st.table(tasks)
+
+    all_pets = ["All"] + sorted({t["pet"] for t in tasks})
+    all_priorities = ["All", "high", "medium", "low"]
+
+    fcol1, fcol2, fcol3 = st.columns(3)
+    with fcol1:
+        filter_pet = st.selectbox("Filter by pet", all_pets, key="filter_pet")
+    with fcol2:
+        filter_priority = st.selectbox("Filter by priority", all_priorities, key="filter_priority")
+    with fcol3:
+        sort_by = st.selectbox("Sort by", ["None", "duration_minutes", "priority"], key="sort_by")
+
+    filtered = [
+        t for t in tasks
+        if (filter_pet == "All" or t["pet"] == filter_pet)
+        and (filter_priority == "All" or t["priority"] == filter_priority)
+    ]
+
+    if sort_by == "duration_minutes":
+        filtered = sorted(filtered, key=lambda t: t["duration_minutes"])
+    elif sort_by == "priority":
+        filtered = sorted(filtered, key=lambda t: {"high": 0, "medium": 1, "low": 2}[t["priority"]])
+
+    if filtered:
+        st.dataframe(filtered, use_container_width=True, hide_index=True)
+    else:
+        st.info("No tasks match the current filters.")
 else:
     st.info("No tasks yet. Add one above.")
 
