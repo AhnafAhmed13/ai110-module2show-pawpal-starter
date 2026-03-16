@@ -163,11 +163,16 @@ if st.button("Generate schedule", disabled=no_owner):
         st.session_state.owner.available_time = available_time
         schedule = Scheduler(st.session_state.owner).create_schedule()
         if schedule:
-            task_table = []
+            task_to_pet = {
+                t: pet.name
+                for pet in st.session_state.owner.pets
+                for t in pet.tasks
+            }
             st.write("Today's Schedule:")
-            for t in schedule:
-                task_table.append({"title": t.title, "duration_minutes": t.duration, "priority": t.priority})
-            st.table(task_table)
+            st.table([
+                {"pet": task_to_pet.get(t, ""), "title": t.title, "duration_minutes": t.duration, "priority": t.priority}
+                for t in schedule
+            ])
         else:
             st.info("No tasks yet. Add one above.")
     else:
