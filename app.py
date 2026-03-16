@@ -136,12 +136,13 @@ if st.button("Add task", disabled=no_pet):
     pet.add_task(Task(title=task_title, duration=int(duration), priority=priority))
 
 if st.session_state.owner:
-    tasks = st.session_state.owner.get_all_tasks()
-    if tasks:
-        task_table = []
+    task_table = [
+        {"pet": pet.name, "title": t.title, "duration_minutes": t.duration, "priority": t.priority}
+        for pet in st.session_state.owner.pets
+        for t in pet.tasks
+    ]
+    if task_table:
         st.write("Current tasks:")
-        for t in tasks:
-            task_table.append({"title": t.title, "duration_minutes": t.duration, "priority": t.priority})
         st.table(task_table)
     else:
         st.info("No tasks yet. Add one above.")
@@ -153,8 +154,13 @@ st.divider()
 st.subheader("Build Schedule")
 st.caption("This button should call your scheduling logic once you implement it.")
 
+available_time = st.slider(
+    "Available time (minutes)", min_value=10, max_value=480, value=60, step=10, disabled=no_owner
+)
+
 if st.button("Generate schedule", disabled=no_owner):
     if st.session_state.owner:
+        st.session_state.owner.available_time = available_time
         schedule = Scheduler(st.session_state.owner).create_schedule()
         if schedule:
             task_table = []
