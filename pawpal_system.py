@@ -4,9 +4,8 @@ from dataclasses import dataclass, field
 @dataclass
 class Task:
     title: str
-    description: str
     duration: int = 10
-    priority: int = 1
+    priority: str = "low"
     status: str = "Todo"
 
     def __str__(self) -> str:
@@ -44,7 +43,7 @@ class Pet:
 
 
 class Owner:
-    def __init__(self, name: str, available_time: int = 30):
+    def __init__(self, name: str, available_time: int = 60):
         """Initialize an Owner with a name and available time in minutes."""
         self.name = name
         self.available_time = available_time
@@ -53,6 +52,20 @@ class Owner:
     def add_pet(self, pet: Pet) -> None:
         """Append a pet to the owner's pet list."""
         self.pets.append(pet)
+
+    def get_pet(self, name: str, species: str) -> Pet:
+        """Return a pet from the owner's pet list."""
+        for pet in self.pets:
+            if pet.name == name and pet.species == species:
+                return pet
+        return None
+    
+    def get_all_tasks(self) -> list[Task]:
+        tasks = []
+        for p in self.pets:
+            for t in p.tasks:
+                tasks.append(t)
+        return tasks
 
     def print_pets(self) -> None:
         """Print all pets belonging to this owner."""
@@ -68,8 +81,11 @@ class Scheduler:
 
     def create_schedule(self) -> list[Task]:
         """Return a priority-sorted list of tasks that fit within the owner's available time."""
+        
+        PRIORITY_ORDER = {"low": 0, "medium": 1, "high": 2}
+
         all_tasks = [task for pet in self.owner.pets for task in pet.tasks]
-        sorted_tasks = sorted(all_tasks, key=lambda t: t.priority, reverse=True)
+        sorted_tasks = sorted(all_tasks, key=lambda t: PRIORITY_ORDER[t.priority], reverse=True)
 
         schedule = []
         remaining_time = self.owner.available_time
